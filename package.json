@@ -1,0 +1,11 @@
+{
+  "name": "nextpartner-service",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./src/index.css -o ./dist/index.css --watch",
+    "build": "npx tailwindcss -i ./src/index.css -o ./dist/index.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

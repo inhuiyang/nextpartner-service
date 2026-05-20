@@ -1,0 +1,926 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    @apply font-base text-neutral-900 bg-neutral-50;
+  }
+}
+
+@layer components {
+
+  /* ── Button Base ── */
+  .np-btn {
+    @apply inline-flex items-center justify-center gap-2
+           font-base font-bold
+           rounded-button border border-transparent cursor-pointer
+           transition-all duration-[120ms] ease-out
+           whitespace-nowrap relative select-none;
+  }
+  .np-btn:focus-visible {
+    @apply outline-none shadow-[0_0_0_3px_rgba(255,184,159,0.35)];
+  }
+  .np-btn:disabled {
+    @apply opacity-40 cursor-not-allowed pointer-events-none;
+  }
+
+  /* Sizes — 시니어 가독성: 최소 text-lg(18px) */
+  .np-btn-sm  { @apply h-10 px-4 text-lg;  }
+  .np-btn-md  { @apply h-12 px-5 text-xl;  }
+  .np-btn-lg  { @apply h-14 px-6 text-2xl; }
+
+  /* Variants */
+  .np-btn-primary {
+    @apply bg-primary-500 text-neutral-0
+           hover:bg-primary-400 active:bg-primary-300;
+  }
+  .np-btn-secondary {
+    @apply bg-neutral-0 text-primary-500
+           border-primary-500
+           hover:bg-primary-50 active:bg-primary-100;
+  }
+  .np-btn-ghost {
+    @apply bg-transparent text-primary-500
+           hover:bg-primary-50 active:bg-primary-100;
+  }
+  .np-btn-grey {
+    @apply bg-neutral-100 text-neutral-400
+           hover:bg-neutral-200 active:bg-neutral-200;
+  }
+  .np-btn-grey-stroke {
+    @apply bg-neutral-0 text-neutral-800
+           border border-neutral-200
+           hover:bg-neutral-50 active:bg-neutral-100;
+  }
+
+  /* ── Icon Button ── */
+  .np-btn-icon {
+    @apply inline-flex items-center justify-center
+           rounded-button border border-solid border-transparent cursor-pointer
+           transition-all duration-[120ms] ease-out select-none;
+  }
+  .np-btn-icon:focus-visible {
+    @apply outline-none shadow-[0_0_0_3px_rgba(255,184,159,0.35)];
+  }
+  .np-btn-icon:disabled {
+    @apply opacity-40 cursor-not-allowed pointer-events-none;
+  }
+
+  /* Icon Button Sizes */
+  .np-btn-icon-sm { @apply w-10 h-10; }
+  .np-btn-icon-md { @apply w-12 h-12; }
+  .np-btn-icon-lg { @apply w-14 h-14; }
+
+  /* Icon Button Variants */
+  .np-btn-icon-primary {
+    @apply bg-primary-500 text-neutral-0
+           hover:bg-primary-400 active:bg-primary-300;
+  }
+  .np-btn-icon-secondary {
+    @apply bg-neutral-0 text-primary-500
+           border-primary-500
+           hover:bg-primary-50 active:bg-primary-100;
+  }
+  .np-btn-icon-ghost {
+    @apply bg-transparent text-primary-500
+           hover:bg-primary-50 active:bg-primary-100;
+  }
+  .np-btn-icon-grey {
+    @apply bg-neutral-100 text-neutral-800
+           hover:bg-neutral-200 active:bg-neutral-200;
+  }
+  .np-btn-icon-grey-stroke {
+    @apply bg-neutral-0 text-neutral-800
+           border-neutral-200
+           hover:bg-neutral-50 active:bg-neutral-100;
+  }
+
+  /* FAB */
+  .np-fab {
+    @apply inline-flex items-center justify-center
+           w-14 h-14 rounded-pill
+           bg-primary-500 text-neutral-0
+           shadow-[0_4px_12px_rgba(255,127,101,0.35)]
+           hover:bg-primary-400 active:bg-primary-300
+           transition-all duration-[120ms] ease-out cursor-pointer border-none;
+  }
+
+  /* ── Text Field — 시니어 가독성: 레이블 text-lg, 입력값 text-xl ── */
+  .np-textfield-wrap { @apply flex flex-col gap-2; }
+  .np-textfield-label { @apply text-lg font-semibold text-neutral-800; }
+  .np-textfield {
+    @apply w-full h-14 px-4
+           font-base text-xl text-neutral-900
+           bg-neutral-0 border border-neutral-200 rounded-button
+           outline-none transition-all duration-[120ms] ease-out
+           placeholder:text-neutral-400;
+  }
+  .np-textfield:focus {
+    @apply border-primary-500 shadow-[0_0_0_3px_rgba(255,184,159,0.25)];
+  }
+  .np-textfield-error {
+    @apply border-error-500;
+  }
+  .np-textfield-error:focus {
+    @apply shadow-[0_0_0_3px_rgba(244,67,54,0.15)];
+  }
+  .np-textfield-hint { @apply text-base text-neutral-400 mt-1; }
+  .np-textfield-hint-error { @apply text-base text-error-500 mt-1; }
+  .np-textfield:disabled {
+    @apply bg-neutral-50 text-neutral-400 cursor-not-allowed;
+  }
+
+  /* ── Password Field (텍스트필드 + 표시/숨김 토글) ── */
+  .np-textfield-password-wrap {
+    @apply relative;
+  }
+  .np-textfield-password-wrap .np-textfield {
+    padding-right: 3.5rem;
+  }
+  .np-textfield-pw-toggle {
+    @apply absolute right-3 top-1/2 -translate-y-1/2
+           flex items-center justify-center w-8 h-8
+           text-neutral-400 rounded-button cursor-pointer
+           hover:text-neutral-700
+           transition-colors duration-[120ms] ease-out
+           bg-transparent border-none select-none;
+  }
+  .np-textfield-pw-toggle:focus-visible {
+    @apply outline-none shadow-[0_0_0_3px_rgba(255,184,159,0.35)];
+  }
+
+  /* ── Date / Time Picker ── */
+  .np-datepicker,
+  .np-timepicker {
+    @apply w-full h-14 px-4
+           font-base text-xl text-neutral-900
+           bg-neutral-0 border border-neutral-200 rounded-button
+           outline-none transition-all duration-[120ms] ease-out
+           cursor-pointer;
+  }
+  .np-datepicker:focus,
+  .np-timepicker:focus {
+    @apply border-primary-500 shadow-[0_0_0_3px_rgba(255,184,159,0.25)];
+  }
+  .np-datepicker-error,
+  .np-timepicker-error {
+    @apply border-error-500;
+  }
+  .np-datepicker-error:focus,
+  .np-timepicker-error:focus {
+    @apply shadow-[0_0_0_3px_rgba(244,67,54,0.15)];
+  }
+  .np-datepicker:disabled,
+  .np-timepicker:disabled {
+    @apply bg-neutral-50 text-neutral-400 cursor-not-allowed;
+  }
+
+  .np-textarea {
+    @apply w-full px-4 py-3
+           font-base text-xl text-neutral-900
+           bg-neutral-0 border border-neutral-200 rounded-button
+           outline-none transition-all duration-[120ms] ease-out
+           placeholder:text-neutral-400
+           resize-y leading-relaxed;
+    min-height: 120px;
+  }
+  .np-textarea:focus {
+    @apply border-primary-500 shadow-[0_0_0_3px_rgba(255,184,159,0.25)];
+  }
+  .np-textarea-error {
+    @apply border-error-500;
+  }
+  .np-textarea-error:focus {
+    @apply shadow-[0_0_0_3px_rgba(244,67,54,0.15)];
+  }
+  .np-textarea:disabled {
+    @apply bg-neutral-50 text-neutral-400 cursor-not-allowed resize-none;
+  }
+
+  /* ── Input Stepper ── */
+  .np-stepper {
+    @apply inline-flex items-center self-start
+           rounded-button border border-neutral-200 bg-neutral-0
+           overflow-hidden;
+  }
+  .np-stepper-btn {
+    @apply flex items-center justify-center shrink-0
+           font-base text-neutral-800
+           bg-transparent border-none cursor-pointer select-none
+           transition-colors duration-[120ms] ease-out
+           hover:bg-neutral-50 active:bg-neutral-100;
+  }
+  .np-stepper-btn:disabled {
+    @apply text-neutral-200 cursor-not-allowed pointer-events-none;
+  }
+  .np-stepper-value {
+    @apply flex items-center justify-center
+           font-base font-bold text-neutral-900
+           border-x border-neutral-200 select-none;
+  }
+
+  /* Stepper Sizes */
+  .np-stepper-sm { @apply h-10; }
+  .np-stepper-sm .np-stepper-btn   { @apply w-10 h-10 text-xl; }
+  .np-stepper-sm .np-stepper-value { @apply w-10 text-base; }
+
+  .np-stepper-md { @apply h-14; }
+  .np-stepper-md .np-stepper-btn   { @apply w-14 h-14 text-2xl; }
+  .np-stepper-md .np-stepper-value { @apply w-14 text-xl; }
+
+  .np-stepper-wrap  { @apply flex flex-col gap-2; }
+  .np-stepper-label { @apply text-lg font-semibold text-neutral-800; }
+  .np-stepper-hint  { @apply text-base text-neutral-400 mt-1; }
+
+  /* ── Checkbox ── */
+  .np-checkbox {
+    @apply inline-flex items-center gap-3 cursor-pointer select-none;
+  }
+  .np-checkbox-input {
+    @apply appearance-none w-6 h-6 shrink-0
+           rounded-badge border-2 border-neutral-200
+           bg-neutral-0 cursor-pointer
+           transition-all duration-[120ms] ease-out;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 14px;
+  }
+  .np-checkbox-input:checked {
+    @apply bg-primary-500 border-primary-500;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+  }
+  .np-checkbox-input:indeterminate {
+    @apply bg-primary-500 border-primary-500;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5 12h14'/%3E%3C/svg%3E");
+  }
+  .np-checkbox-input:focus-visible {
+    @apply outline-none shadow-[0_0_0_3px_rgba(255,184,159,0.35)];
+  }
+  .np-checkbox-input:disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+  .np-checkbox-label {
+    @apply text-lg text-neutral-800;
+  }
+  .np-checkbox:has(.np-checkbox-input:disabled) {
+    @apply cursor-not-allowed;
+  }
+
+  /* ── Radio Button ── */
+  .np-radio {
+    @apply inline-flex items-center gap-3 cursor-pointer select-none;
+  }
+  .np-radio-input {
+    @apply appearance-none w-6 h-6 shrink-0
+           rounded-full border-2 border-neutral-200
+           bg-neutral-0 cursor-pointer
+           transition-all duration-[120ms] ease-out;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .np-radio-input:checked {
+    @apply border-primary-500;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='5' fill='%23ff7f65'/%3E%3C/svg%3E");
+  }
+  .np-radio-input:focus-visible {
+    @apply outline-none shadow-[0_0_0_3px_rgba(255,184,159,0.35)];
+  }
+  .np-radio-input:disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+  .np-radio-label {
+    @apply text-lg text-neutral-800;
+  }
+  .np-radio:has(.np-radio-input:disabled) {
+    @apply cursor-not-allowed;
+  }
+
+  /* ── Switch ── */
+  .np-switch {
+    @apply inline-flex items-center gap-3 cursor-pointer select-none;
+  }
+  .np-switch-input {
+    @apply appearance-none relative shrink-0
+           rounded-pill bg-neutral-200 cursor-pointer
+           transition-colors duration-[200ms] ease-out;
+  }
+  .np-switch-input::after {
+    content: '';
+    position: absolute;
+    border-radius: 9999px;
+    background: white;
+    transition: transform 200ms ease-out;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .np-switch-input:checked {
+    @apply bg-primary-500;
+  }
+  .np-switch-input:focus-visible {
+    @apply outline-none shadow-[0_0_0_3px_rgba(255,184,159,0.35)];
+  }
+  .np-switch-input:disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+  .np-switch:has(.np-switch-input:disabled) {
+    @apply cursor-not-allowed;
+  }
+  .np-switch-label {
+    @apply text-lg text-neutral-800;
+  }
+
+  /* Switch SM — 40×24 */
+  .np-switch-sm { width: 40px; height: 24px; }
+  .np-switch-sm::after { width: 18px; height: 18px; top: 3px; left: 3px; }
+  .np-switch-sm:checked::after { transform: translateX(16px); }
+
+  /* Switch MD — 52×30 */
+  .np-switch-md { width: 52px; height: 30px; }
+  .np-switch-md::after { width: 24px; height: 24px; top: 3px; left: 3px; }
+  .np-switch-md:checked::after { transform: translateX(22px); }
+
+  /* ── Dropdown ── */
+  details.np-dropdown { @apply relative inline-block; }
+  details.np-dropdown > summary { list-style: none; }
+  details.np-dropdown > summary::-webkit-details-marker { display: none; }
+  .np-dropdown-chevron {
+    @apply shrink-0 transition-transform duration-[120ms] ease-out;
+  }
+  details.np-dropdown[open] .np-dropdown-chevron { @apply rotate-180; }
+
+  .np-dropdown-menu {
+    @apply absolute left-0 top-full mt-2 min-w-full z-20
+           bg-neutral-0 border border-neutral-200 rounded-button
+           shadow-[0_4px_16px_rgba(0,0,0,0.10)]
+           overflow-hidden py-1;
+  }
+  .np-dropdown-item {
+    @apply flex items-center gap-3 px-5 py-3
+           font-base text-lg text-neutral-800 cursor-pointer
+           transition-colors duration-[120ms] ease-out
+           hover:bg-neutral-50 active:bg-neutral-100;
+  }
+  .np-dropdown-item.selected {
+    @apply text-primary-500 font-semibold bg-primary-50;
+  }
+  .np-dropdown-item.disabled {
+    @apply text-neutral-400 cursor-not-allowed pointer-events-none;
+  }
+  .np-dropdown-divider { @apply border-t border-neutral-100 my-1; }
+
+  /* ── Search Field ── */
+  .np-search {
+    @apply relative flex items-center
+           h-14 px-4 gap-2
+           bg-neutral-0 border border-neutral-200 rounded-search
+           transition-all duration-[120ms] ease-out;
+  }
+  .np-search:focus-within {
+    @apply border-primary-500 shadow-[0_0_0_3px_rgba(255,184,159,0.25)];
+  }
+  .np-search-input {
+    @apply flex-1 bg-transparent border-none outline-none
+           font-base text-xl text-neutral-900
+           placeholder:text-neutral-400;
+  }
+  .np-search-icon { @apply text-neutral-400 shrink-0; }
+  .np-search-clear {
+    @apply text-neutral-400 hover:text-neutral-600
+           cursor-pointer shrink-0 transition-colors duration-[120ms];
+  }
+
+  /* Search View (결과 드롭다운) */
+  .np-search-view {
+    @apply bg-neutral-0 border border-neutral-200 rounded-card
+           shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden;
+  }
+  .np-search-section-label {
+    @apply px-4 pt-4 pb-2 text-sm font-bold text-neutral-400 uppercase tracking-widest;
+  }
+  .np-search-item {
+    @apply flex items-center gap-3 px-4 py-3
+           text-lg text-neutral-800 cursor-pointer
+           transition-colors duration-[120ms] ease-out
+           hover:bg-neutral-50 active:bg-neutral-100;
+  }
+  .np-search-item-keyword { @apply font-bold text-primary-500; }
+  .np-search-divider { @apply border-t border-neutral-100 mx-4; }
+
+  /* ── Chip — 시니어 가독성: text-lg, 높이 h-10 ── */
+  .np-chip {
+    @apply inline-flex items-center gap-1
+           h-10 px-4
+           font-base text-lg font-medium
+           bg-neutral-100 text-neutral-800
+           rounded-pill border border-transparent
+           cursor-pointer transition-all duration-[120ms] ease-out select-none;
+  }
+  .np-chip:hover  { @apply bg-neutral-200; }
+  .np-chip-active {
+    @apply bg-primary-50 text-primary-500 border-primary-500;
+  }
+  .np-chip-active:hover { @apply bg-primary-100; }
+
+  /* ── Badge — 시니어 가독성: text-base, 충분한 패딩 ── */
+  .np-badge {
+    @apply inline-flex items-center justify-center
+           px-3 h-7
+           font-base text-base font-semibold
+           rounded-badge;
+  }
+  .np-badge-primary  { @apply bg-primary-500 text-neutral-0; }
+  .np-badge-neutral  { @apply bg-neutral-200 text-neutral-800; }
+  .np-badge-success  { @apply bg-success-100 text-success-500; }
+  .np-badge-warning  { @apply bg-warning-100 text-warning-500; }
+  .np-badge-error    { @apply bg-error-100 text-error-500; }
+  .np-badge-info     { @apply bg-info-100 text-info-500; }
+  .np-badge-gradient {
+    @apply text-neutral-0;
+    background: linear-gradient(135deg, #FFAA00 0%, #FF2D9E 33%, #80BFFF 66%, #67E8D8 100%);
+  }
+
+  /* ── Divider ── */
+  .np-divider {
+    @apply w-full border-none border-t border-neutral-200 my-0;
+  }
+  .np-divider-thick {
+    @apply w-full h-2 bg-neutral-100 border-none;
+  }
+
+  /* ── Header ── */
+  .np-header {
+    @apply w-full bg-neutral-0 border-b border-neutral-200;
+  }
+  .np-header-inner {
+    @apply max-w-content mx-auto px-4 md:px-6
+           flex items-center h-16 md:h-20 gap-4 md:gap-8;
+  }
+  .np-header-nav {
+    @apply hidden md:flex items-center gap-1 ml-auto;
+  }
+  .np-header-actions {
+    @apply hidden md:flex items-center gap-2 ml-4;
+  }
+  .np-header-menu-btn {
+    @apply ml-auto flex md:hidden items-center justify-center
+           w-10 h-10 text-neutral-800 rounded-button cursor-pointer
+           hover:bg-neutral-50 transition-colors duration-[120ms] ease-out;
+  }
+  .np-nav-link {
+    @apply px-3 py-2 text-xl text-neutral-500 font-medium rounded-button cursor-pointer
+           hover:text-neutral-900 hover:bg-neutral-50
+           transition-colors duration-[120ms] ease-out;
+  }
+  .np-nav-link-job {
+    @apply px-3 py-2 text-xl font-bold text-neutral-900 rounded-button cursor-pointer
+           hover:text-primary-500 hover:bg-primary-50
+           transition-colors duration-[120ms] ease-out;
+  }
+  .np-nav-link.active     { @apply text-primary-500 bg-primary-50; }
+  .np-nav-link-job.active { @apply text-primary-500 bg-primary-50; }
+  .np-nav-label {
+    @apply px-2 text-xs font-bold text-neutral-400 tracking-widest whitespace-nowrap;
+  }
+  .np-header-divider {
+    @apply w-px h-4 bg-neutral-200 mx-1;
+  }
+
+  /* ── Top App Bar ── */
+  .np-app-bar {
+    @apply w-full bg-neutral-0 border-b border-neutral-200
+           flex items-center h-14 px-2 gap-1;
+  }
+  .np-app-bar-title {
+    @apply flex-1 text-xl font-bold text-neutral-900 truncate px-2;
+  }
+  .np-app-bar-title-center {
+    @apply flex-1 text-xl font-bold text-neutral-900 text-center truncate;
+  }
+  .np-app-bar-btn {
+    @apply w-10 h-10 shrink-0 flex items-center justify-center
+           text-neutral-800 rounded-button cursor-pointer
+           hover:bg-neutral-50 active:bg-neutral-100
+           transition-colors duration-[120ms] ease-out;
+  }
+
+  /* ── Bottom Navigation Bar ── */
+  .np-bottom-nav {
+    @apply w-full bg-neutral-0 border-t border-neutral-200
+           flex items-stretch;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .np-bottom-nav-item {
+    @apply flex-1 flex flex-col items-center justify-center gap-1 py-2
+           text-neutral-400 cursor-pointer border-none bg-transparent
+           transition-colors duration-[120ms] ease-out;
+  }
+  .np-bottom-nav-item.active { @apply text-primary-500; }
+  .np-bottom-nav-item:hover  { @apply text-neutral-600; }
+  .np-bottom-nav-item.active:hover { @apply text-primary-400; }
+  .np-bottom-nav-label {
+    @apply text-xs font-medium;
+  }
+  .np-bottom-nav-badge {
+    @apply absolute -top-1 -right-1
+           w-4 h-4 rounded-full bg-primary-500 text-neutral-0
+           text-[10px] font-bold flex items-center justify-center;
+  }
+
+  /* ── Tab ── */
+  .np-tab-bar {
+    @apply flex border-b border-neutral-200 overflow-x-auto;
+    scrollbar-width: none;
+  }
+  .np-tab-bar::-webkit-scrollbar { display: none; }
+  .np-tab-item {
+    @apply px-4 py-3 text-base font-medium text-neutral-400
+           cursor-pointer whitespace-nowrap select-none
+           border-b-2 border-transparent
+           transition-colors duration-[120ms] ease-out;
+    margin-bottom: -1px;
+  }
+  .np-tab-item:hover { @apply text-neutral-800; }
+  .np-tab-item.active {
+    @apply text-primary-500 border-primary-500 font-bold;
+  }
+  .np-tab-item.disabled {
+    @apply text-neutral-200 cursor-not-allowed pointer-events-none;
+  }
+
+  /* ── Segmented Control ── */
+  .np-segmented {
+    @apply inline-flex bg-neutral-100 p-1 rounded-button gap-1;
+  }
+  .np-segmented-full {
+    @apply flex w-full bg-neutral-100 p-1 rounded-button gap-1;
+  }
+  .np-segmented-item {
+    @apply flex-1 flex items-center justify-center gap-2 px-4 py-2
+           text-base font-medium text-neutral-400
+           rounded-[6px] cursor-pointer select-none whitespace-nowrap
+           transition-all duration-[120ms] ease-out;
+  }
+  .np-segmented-item.active {
+    @apply bg-neutral-0 text-neutral-900 font-bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+  }
+  .np-segmented-item:not(.active):hover { @apply text-neutral-600; }
+  .np-segmented-item.disabled {
+    @apply text-neutral-200 cursor-not-allowed pointer-events-none;
+  }
+
+  /* ── Toast ── */
+  .np-toast {
+    @apply inline-flex items-center gap-3 px-4 py-3
+           bg-neutral-900 text-neutral-0
+           text-base font-medium rounded-pill
+           pointer-events-auto;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  }
+  .np-toast-action {
+    @apply ml-1 font-bold text-base cursor-pointer shrink-0 text-primary-300;
+  }
+  .np-toast-close {
+    @apply ml-1 shrink-0 flex items-center text-neutral-400 cursor-pointer;
+  }
+  .np-toast-wrap {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 8px;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  /* ── Job Card ── */
+  .np-job-card {
+    @apply bg-neutral-0 rounded-card border border-neutral-200
+           p-5 flex flex-col
+           cursor-pointer transition-all duration-150 ease-out;
+  }
+  .np-job-card:hover {
+    @apply border-primary-500 shadow-[0_4px_16px_rgba(0,0,0,0.08)] -translate-y-0.5;
+  }
+  .np-job-card-recommended {
+    border: 2px solid transparent;
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(135deg, #FFAA00 0%, #FF2D9E 33%, #80BFFF 66%, #67E8D8 100%) border-box;
+  }
+  .np-job-card-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-pill
+           text-base font-bold text-neutral-0;
+    background: linear-gradient(135deg, #FFAA00 0%, #FF2D9E 33%);
+  }
+  .np-job-card-urgency {
+    @apply text-base font-bold text-primary-500;
+  }
+  .np-job-card-deadline {
+    @apply text-base font-semibold text-primary-500;
+  }
+  .np-job-card-title {
+    @apply text-2xl font-bold text-neutral-900;
+    line-height: 1.375;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    overflow: hidden;
+    min-height: calc(1.375em * 2);
+  }
+  .np-job-card-company {
+    @apply text-base text-neutral-400;
+  }
+  .np-job-card-meta {
+    @apply text-lg text-neutral-600;
+  }
+  .np-job-card-pay {
+    @apply text-lg text-neutral-600;
+  }
+  .np-job-card-register {
+    @apply text-base text-neutral-400;
+  }
+  .np-job-card-reasons-box {
+    @apply bg-primary-50 rounded-card p-3;
+  }
+  .np-job-card-reasons {
+    @apply flex flex-col gap-1;
+  }
+  .np-job-card-reason {
+    @apply text-lg text-primary-500;
+  }
+  .np-job-card-reason::before {
+    content: '• ';
+  }
+
+  .np-job-card-type {
+    @apply inline-flex items-center px-2 py-1 rounded-badge
+           text-base font-bold text-neutral-600 bg-warm-grey-100;
+  }
+  .np-job-card-duration {
+    @apply text-lg text-neutral-600;
+  }
+  .np-job-card-list {
+    @apply flex flex-row items-start gap-5;
+  }
+  .np-job-card-list .np-job-card-title {
+    min-height: 0;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  .np-job-card-list .np-job-card-reasons {
+    @apply flex-row flex-wrap gap-x-4 gap-y-1;
+  }
+  /* ── Footer ── */
+  .np-footer {
+    @apply w-full bg-neutral-0 border-t border-neutral-200 px-4 md:px-8 py-8 md:py-10;
+  }
+  .np-footer-inner {
+    @apply max-w-content mx-auto flex flex-col gap-8 md:flex-row md:justify-between md:gap-12;
+  }
+  .np-footer-tagline {
+    @apply text-lg font-bold text-neutral-900 mb-3;
+  }
+  .np-footer-info {
+    @apply text-sm text-neutral-500 leading-relaxed;
+  }
+  .np-footer-section-title {
+    @apply text-base font-bold text-neutral-900 mb-4;
+  }
+  .np-footer-link {
+    @apply text-base text-neutral-500 cursor-pointer block mb-3
+           hover:text-neutral-900 transition-colors duration-[120ms] ease-out;
+  }
+
+  /* ── Help Panel ── */
+  .np-help-overlay {
+    @apply fixed inset-0 z-40 opacity-0 pointer-events-none
+           transition-opacity duration-300 ease-out;
+    background: rgba(26, 26, 26, 0.4);
+  }
+  .np-help-overlay.open {
+    @apply opacity-100 pointer-events-auto;
+  }
+  .np-help-panel {
+    @apply fixed top-0 right-0 h-full z-50 bg-neutral-0 flex flex-col;
+    width: 360px;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+    transform: translateX(100%);
+    transition: transform 300ms ease-out;
+  }
+  .np-help-panel.open {
+    transform: translateX(0);
+  }
+  .np-help-panel-header {
+    @apply flex items-center justify-between px-6 py-5
+           border-b border-neutral-100 shrink-0;
+  }
+  .np-help-panel-title {
+    @apply text-xl font-bold text-neutral-900;
+  }
+  .np-help-panel-close {
+    @apply flex items-center justify-center w-10 h-10
+           text-neutral-400 rounded-button cursor-pointer
+           hover:bg-neutral-50 hover:text-neutral-800
+           transition-colors duration-[120ms] ease-out;
+  }
+  .np-help-panel-body {
+    @apply flex-1 overflow-y-auto px-6 py-5;
+  }
+  .np-help-section {
+    @apply mb-6;
+  }
+  .np-help-section-title {
+    @apply text-base font-bold text-neutral-900 mb-3 flex items-center gap-2;
+  }
+  .np-help-item {
+    @apply flex gap-3 pb-4 mb-4 border-b border-neutral-100 last:border-0 last:mb-0 last:pb-0;
+  }
+  .np-help-item-num {
+    @apply shrink-0 w-6 h-6 rounded-full bg-primary-100 text-primary-500
+           text-sm font-bold flex items-center justify-center;
+  }
+  .np-help-item-text {
+    @apply text-base text-neutral-700 leading-relaxed;
+  }
+  .np-help-faq-q {
+    @apply text-base font-semibold text-neutral-900 mb-1;
+  }
+  .np-help-faq-a {
+    @apply text-base text-neutral-600 leading-relaxed;
+  }
+  .np-help-panel-footer {
+    @apply px-6 py-4 border-t border-neutral-100 shrink-0;
+  }
+
+  /* ── Tooltip ── */
+  .np-tooltip-wrap {
+    @apply relative inline-flex items-center justify-center;
+  }
+  .np-tooltip {
+    @apply absolute z-20 px-3 py-2 text-sm font-medium text-neutral-0 leading-snug
+           bg-neutral-900 rounded-button whitespace-nowrap
+           pointer-events-none opacity-0
+           transition-opacity duration-150 ease-out;
+  }
+  .np-tooltip-wrap:hover .np-tooltip {
+    @apply opacity-100;
+  }
+  /* 위치 */
+  .np-tooltip-top    { @apply bottom-full left-1/2 -translate-x-1/2 mb-2; }
+  .np-tooltip-bottom { @apply top-full left-1/2 -translate-x-1/2 mt-2; }
+  .np-tooltip-left   { @apply right-full top-1/2 -translate-y-1/2 mr-2; }
+  .np-tooltip-right  { @apply left-full top-1/2 -translate-y-1/2 ml-2; }
+  /* 화살표 */
+  .np-tooltip-top::after {
+    content: '';
+    @apply absolute top-full left-1/2 -translate-x-1/2;
+    border: 5px solid transparent;
+    border-top-color: #1a1a1a;
+  }
+  .np-tooltip-bottom::after {
+    content: '';
+    @apply absolute bottom-full left-1/2 -translate-x-1/2;
+    border: 5px solid transparent;
+    border-bottom-color: #1a1a1a;
+  }
+  .np-tooltip-left::after {
+    content: '';
+    @apply absolute left-full top-1/2 -translate-y-1/2;
+    border: 5px solid transparent;
+    border-left-color: #1a1a1a;
+  }
+  .np-tooltip-right::after {
+    content: '';
+    @apply absolute right-full top-1/2 -translate-y-1/2;
+    border: 5px solid transparent;
+    border-right-color: #1a1a1a;
+  }
+
+  /* ── Modal ── */
+  .np-modal-overlay {
+    @apply fixed inset-0 flex items-center justify-center z-50 px-4;
+    background: rgba(26, 26, 26, 0.5);
+  }
+  .np-modal {
+    @apply bg-neutral-0 rounded-card w-full max-w-md
+           shadow-[0_8px_32px_rgba(0,0,0,0.18)]
+           flex flex-col;
+  }
+  .np-modal-header {
+    @apply flex items-center justify-between px-6 pt-6 pb-4;
+  }
+  .np-modal-title {
+    @apply text-xl font-bold text-neutral-900;
+  }
+  .np-modal-close {
+    @apply flex items-center justify-center w-10 h-10
+           text-neutral-400 rounded-button cursor-pointer
+           hover:bg-neutral-50 hover:text-neutral-800
+           transition-colors duration-[120ms] ease-out;
+  }
+  .np-modal-body {
+    @apply px-6 pb-4 text-lg text-neutral-600 leading-relaxed;
+  }
+  .np-modal-footer {
+    @apply flex gap-3 px-6 pb-6 pt-2;
+  }
+
+  /* ── Pagination ── */
+  .np-pagination {
+    @apply flex items-center gap-1;
+  }
+  .np-page-btn {
+    @apply inline-flex items-center justify-center shrink-0 min-w-[40px] h-10 px-2
+           rounded-button text-base text-neutral-600
+           bg-neutral-0 border border-neutral-200 cursor-pointer
+           hover:bg-neutral-50 hover:text-neutral-900
+           transition-colors duration-[120ms] ease-out select-none;
+  }
+  .np-page-btn-active {
+    @apply bg-primary-500 text-neutral-0 border-primary-500 font-bold
+           hover:bg-primary-400 hover:text-neutral-0;
+  }
+  .np-page-btn-disabled {
+    @apply opacity-30 cursor-not-allowed pointer-events-none;
+  }
+
+  /* ── Pagination Mobile ── */
+  .np-pagination-mobile {
+    @apply flex items-center justify-between w-full;
+  }
+  .np-pagination-mobile-btn {
+    @apply inline-flex items-center gap-1
+           text-base font-semibold text-primary-500
+           bg-transparent border-none cursor-pointer select-none
+           transition-colors duration-[120ms] ease-out
+           hover:text-primary-400 active:text-primary-300;
+  }
+  .np-pagination-mobile-btn:disabled {
+    @apply text-neutral-200 cursor-not-allowed pointer-events-none;
+  }
+  .np-pagination-mobile-indicator {
+    @apply text-base font-semibold text-neutral-800;
+  }
+
+  /* ── Loading ── */
+  .np-spinner {
+    @apply inline-block rounded-full border-2 border-neutral-200 animate-spin;
+    border-top-color: theme('colors.primary.500');
+  }
+  .np-spinner-sm  { @apply w-5 h-5 border-2; }
+  .np-spinner-md  { @apply w-8 h-8; border-width: 3px; }
+  .np-spinner-lg  { @apply w-12 h-12 border-4; }
+  .np-skeleton {
+    @apply bg-neutral-200 rounded animate-pulse;
+  }
+  .np-loading-overlay {
+    @apply fixed inset-0 flex items-center justify-center z-50;
+    background: rgba(26, 26, 26, 0.4);
+  }
+
+  /* ── Bottom Sheet ── */
+  .np-bottom-sheet-overlay {
+    @apply absolute inset-0 z-40;
+    background: rgba(26, 26, 26, 0.4);
+  }
+  .np-bottom-sheet {
+    @apply absolute bottom-0 left-0 right-0 z-50
+           bg-neutral-0 flex flex-col;
+    border-radius: 20px 20px 0 0;
+  }
+  .np-bottom-sheet-handle {
+    @apply flex justify-center pt-3 pb-1 shrink-0 cursor-grab;
+  }
+  .np-bottom-sheet-handle::after {
+    content: '';
+    @apply block w-10 h-1 bg-neutral-200 rounded-pill;
+  }
+  .np-bottom-sheet-header {
+    @apply px-5 pt-3 pb-4 shrink-0;
+  }
+  .np-bottom-sheet-title {
+    @apply text-xl font-bold text-neutral-900;
+  }
+  .np-bottom-sheet-body {
+    @apply px-5 py-4 overflow-y-auto;
+  }
+  .np-bottom-sheet-footer {
+    @apply px-5 py-4 border-t border-neutral-100 shrink-0;
+  }
+
+}
+
+@keyframes np-toast-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes np-toast-out {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(10px); }
+}
