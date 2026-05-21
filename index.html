@@ -8,25 +8,27 @@
   <link rel="stylesheet" href="dist/index.css" />
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    /* FAQ 아코디언 chevron 회전 */
+    /* FAQ chevron */
     .faq-chevron { transition: transform 200ms ease; }
     details[open] .faq-chevron { transform: rotate(180deg); }
 
-    /* FAQ 답변 영역 left border */
-    .faq-answer { border-left: 4px solid #E84393; }
+    /* FAQ 답변 left border — primary 500 */
+    .faq-answer { border-left: 4px solid #ff7f65; }
 
-    /* 채널 CTA 버튼 공통 focus ring */
-    .channel-cta:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(232, 67, 147, 0.35);
-    }
+    /* 운영 상태 pill */
+    #status-pill { transition: background-color 300ms ease, color 300ms ease; }
+    #status-pill[data-status="open"]    { background:#dcfce7; color:#166534; }
+    #status-pill[data-status="lunch"]   { background:#fef9c3; color:#854d0e; }
+    #status-pill[data-status="closed"]  { background:#f3f4f6; color:#6b7280; }
+    #status-pill[data-status="holiday"] { background:#f3f4f6; color:#6b7280; }
+    #status-pill[data-status="open"]    .status-dot { background:#16a34a; }
+    #status-pill[data-status="lunch"]   .status-dot { background:#ca8a04; }
+    #status-pill[data-status="closed"]  .status-dot { background:#9ca3af; }
+    #status-pill[data-status="holiday"] .status-dot { background:#9ca3af; }
+    .status-dot { width:8px; height:8px; border-radius:9999px; display:inline-block; flex-shrink:0; }
 
-    /* 운영 상태 배너 트랜지션 */
-    #status-banner { transition: background-color 400ms ease; }
-
-    /* 오늘 요일 행 강조 */
-    .today-row { background-color: rgb(253 242 248); }
-    .today-row th, .today-row td { font-weight: 700; }
+    /* 전화 CTA 비활성화 */
+    #phone-cta[data-disabled="true"] { opacity:0.45; pointer-events:none; cursor:not-allowed; }
   </style>
 </head>
 <body class="bg-neutral-50 font-base">
@@ -65,19 +67,15 @@
   </header>
 
   <!-- ── 메인 콘텐츠 ── -->
-  <main id="main-content" class="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pb-24 md:pb-16">
+  <main id="main-content" class="w-full max-w-5xl mx-auto px-4 md:px-6 lg:px-8 pt-8 pb-24 md:pb-12">
 
-    <!-- ── 섹션 01: 페이지 헤더 + 운영 상태 배너 ── -->
-    <section class="py-8 md:py-12">
-
-      <!-- 브레드크럼 -->
-      <nav aria-label="breadcrumb" class="mb-5">
+    <!-- 페이지 헤더 -->
+    <div class="mb-8 md:mb-10">
+      <nav aria-label="breadcrumb" class="mb-4">
         <ol class="flex items-center gap-2 text-base text-neutral-400">
-          <li>
-            <a href="/" class="hover:text-neutral-700 transition-colors duration-120">홈</a>
-          </li>
+          <li><a href="/" class="hover:text-neutral-700 transition-colors">홈</a></li>
           <li aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline align-middle">
               <polyline points="9 18 15 12 9 6"/>
             </svg>
@@ -86,287 +84,271 @@
         </ol>
       </nav>
 
-      <!-- 페이지 제목 -->
-      <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-2 leading-tight">고객센터</h1>
-      <p class="text-lg md:text-xl text-neutral-600 leading-relaxed mb-6">
-        페이지 이동 없이 빠르게 문의할 수 있습니다.
-      </p>
-
-      <!-- 운영 상태 배너 -->
-      <div id="status-banner"
-           role="status"
-           aria-live="polite"
-           class="rounded-xl py-4 px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <span id="status-icon" class="text-2xl leading-none" aria-hidden="true">●</span>
-          <div>
-            <p id="status-label" class="text-xl font-bold text-white">현재 상담 가능</p>
-            <p id="status-sublabel" class="text-base text-white opacity-90">빠르게 연결해 드립니다</p>
-          </div>
-        </div>
-        <div class="text-white sm:text-right pl-9 sm:pl-0">
-          <p class="text-base font-semibold">오늘 10:00 – 17:00</p>
-          <p class="text-sm opacity-80">점심 13:00 – 14:00</p>
+      <div class="flex items-center gap-3 flex-wrap mb-2">
+        <h1 class="text-3xl md:text-4xl font-bold text-neutral-900">고객센터</h1>
+        <div id="status-pill" data-status="open"
+             role="status" aria-live="polite"
+             class="inline-flex items-center gap-2 px-3 py-1 rounded-pill text-sm font-semibold">
+          <span class="status-dot"></span>
+          <span id="status-label">현재 상담 가능</span>
         </div>
       </div>
-    </section>
-
-    <!-- ── 섹션 02: 문의 채널 선택 ── -->
-    <section class="mt-2 md:mt-4" aria-labelledby="channel-section-title">
-      <h2 id="channel-section-title" class="text-2xl md:text-3xl font-bold text-neutral-900 mb-2">
-        문의 채널 선택
-      </h2>
-      <p class="text-lg text-neutral-600 mb-6 leading-relaxed">
-        전화, 카카오톡, 채팅 중 편한 채널을 선택하세요.
+      <p class="text-lg text-neutral-600 leading-relaxed">
+        전화, 카카오톡, 채팅으로 빠르게 도움을 드립니다.
       </p>
+    </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- 2열 레이아웃: FAQ 왼쪽 / 채널+운영시간 오른쪽 -->
+    <div class="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
 
-        <!-- 전화 상담 카드 -->
-        <article class="bg-white rounded-2xl shadow-md p-6 flex flex-col gap-5
-                        transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
-                 aria-label="전화 상담 채널 카드">
-          <div class="flex items-start justify-between">
-            <span id="phone-badge" class="np-badge np-badge-success">운영중</span>
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
-                 style="background-color:#fff0f5;" aria-hidden="true">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                   fill="none" stroke="#E84393" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.64 13
-                         19.79 19.79 0 0 1 1.58 4.42a2 2 0 0 1 1.99-2.18h3a2 2 0 0 1 2 1.72
-                         c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91
-                         a16 16 0 0 0 6.05 6.05l.62-.62a2 2 0 0 1 2.11-.45
-                         c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+      <!-- 왼쪽: FAQ -->
+      <section class="flex-1 min-w-0" aria-labelledby="faq-title">
+        <h2 id="faq-title" class="text-2xl font-bold text-neutral-900 mb-5">자주 묻는 질문</h2>
+
+        <div class="bg-white rounded-2xl shadow-sm divide-y divide-neutral-100">
+
+          <details>
+            <summary class="flex items-center justify-between gap-4 px-6 py-5
+                            cursor-pointer list-none select-none
+                            hover:bg-neutral-50 transition-colors focus-visible:outline-none">
+              <span class="text-lg font-semibold text-neutral-900 leading-relaxed">
+                상담 운영시간이 언제인가요?
+              </span>
+              <svg class="faq-chevron w-5 h-5 text-neutral-400 shrink-0"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"/>
               </svg>
+            </summary>
+            <div class="faq-answer px-6 pb-6 pt-3">
+              <p class="text-[17px] text-neutral-700 leading-[1.8]">
+                평일(월~금) 오전 10시부터 오후 5시까지 운영합니다.
+                점심시간(13:00~14:00)에는 상담이 어려울 수 있습니다.
+                토·일요일 및 법정 공휴일은 휴무입니다.
+              </p>
             </div>
+          </details>
+
+          <details>
+            <summary class="flex items-center justify-between gap-4 px-6 py-5
+                            cursor-pointer list-none select-none
+                            hover:bg-neutral-50 transition-colors focus-visible:outline-none">
+              <span class="text-lg font-semibold text-neutral-900 leading-relaxed">
+                이력서는 어떻게 등록하나요?
+              </span>
+              <svg class="faq-chevron w-5 h-5 text-neutral-400 shrink-0"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+            <div class="faq-answer px-6 pb-6 pt-3">
+              <p class="text-[17px] text-neutral-700 leading-[1.8]">
+                상단 메뉴의 [+ 이력서·자소서] 버튼을 클릭하거나,
+                마이페이지에서 이력서를 등록할 수 있습니다.
+                사진, 경력사항, 자기소개서를 단계별로 입력해 주세요.
+              </p>
+              <a href="/resume/create"
+                 class="inline-flex items-center gap-2 mt-4 np-btn np-btn-secondary np-btn-md">
+                이력서 등록하러 가기
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </a>
+            </div>
+          </details>
+
+          <details>
+            <summary class="flex items-center justify-between gap-4 px-6 py-5
+                            cursor-pointer list-none select-none
+                            hover:bg-neutral-50 transition-colors focus-visible:outline-none">
+              <span class="text-lg font-semibold text-neutral-900 leading-relaxed">
+                지원한 공고의 처리 상태는 어떻게 확인하나요?
+              </span>
+              <svg class="faq-chevron w-5 h-5 text-neutral-400 shrink-0"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+            <div class="faq-answer px-6 pb-6 pt-3">
+              <p class="text-[17px] text-neutral-700 leading-[1.8]">
+                마이페이지 &gt; 지원현황 메뉴에서 지원한 공고의 진행 상태
+                (검토중 / 서류합격 / 불합격)를 확인할 수 있습니다.
+                상태 변경 시 등록된 이메일로도 알림이 발송됩니다.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary class="flex items-center justify-between gap-4 px-6 py-5
+                            cursor-pointer list-none select-none
+                            hover:bg-neutral-50 transition-colors focus-visible:outline-none">
+              <span class="text-lg font-semibold text-neutral-900 leading-relaxed">
+                회원정보(연락처, 비밀번호)를 변경하고 싶어요.
+              </span>
+              <svg class="faq-chevron w-5 h-5 text-neutral-400 shrink-0"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+            <div class="faq-answer px-6 pb-6 pt-3">
+              <p class="text-[17px] text-neutral-700 leading-[1.8]">
+                마이페이지 &gt; 회원정보 수정에서 이름, 연락처, 비밀번호, 이메일 등을 변경할 수 있습니다.
+                비밀번호를 잊으셨다면 로그인 페이지의 [비밀번호 찾기]를 이용해 주세요.
+              </p>
+            </div>
+          </details>
+
+          <details>
+            <summary class="flex items-center justify-between gap-4 px-6 py-5
+                            cursor-pointer list-none select-none
+                            hover:bg-neutral-50 transition-colors focus-visible:outline-none">
+              <span class="text-lg font-semibold text-neutral-900 leading-relaxed">
+                기업 담당자에게 직접 연락할 수 있나요?
+              </span>
+              <svg class="faq-chevron w-5 h-5 text-neutral-400 shrink-0"
+                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </summary>
+            <div class="faq-answer px-6 pb-6 pt-3">
+              <p class="text-[17px] text-neutral-700 leading-[1.8]">
+                개인정보 보호를 위해 지원 전 기업 담당자의 연락처를 제공하지 않습니다.
+                서류 합격 후 면접 단계에서 기업 담당자 정보가 공개됩니다.
+              </p>
+            </div>
+          </details>
+
+        </div>
+
+        <div class="mt-4 text-right">
+          <a href="#"
+             class="text-base font-semibold text-neutral-400 hover:text-neutral-700 transition-colors">
+            전체 FAQ 보기 →
+          </a>
+        </div>
+      </section>
+
+      <!-- 오른쪽: 채널 + 운영시간 (sticky sidebar) -->
+      <aside class="w-full lg:w-[340px] shrink-0 lg:sticky lg:top-6"
+             aria-label="문의 채널 및 운영시간">
+
+        <!-- 채널 카드 -->
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+          <div class="px-6 pt-5 pb-4 border-b border-neutral-100">
+            <h2 class="text-xl font-bold text-neutral-900">문의하기</h2>
           </div>
-          <div>
-            <p class="text-sm font-semibold mb-1" style="color:#E84393;">전화안내</p>
-            <h3 class="text-2xl font-bold text-neutral-900">전화 상담</h3>
-          </div>
-          <div>
-            <p class="text-sm font-bold text-neutral-400 mb-1">TODAY</p>
-            <p class="text-lg font-semibold text-neutral-800">10:00 – 17:00</p>
-            <p class="text-base text-neutral-400">점심 13:00 – 14:00</p>
-          </div>
-          <p class="text-base text-neutral-600 leading-relaxed flex-1">
-            담당자와 직접 통화로 가장 빠르게 해결합니다.<br/>
-            궁금한 점이 있다면 편하게 연락주세요.
-          </p>
-          <div class="flex flex-col gap-2">
-            <a id="phone-cta"
-               href="tel:070-8655-2031"
-               class="channel-cta flex items-center justify-center gap-2 w-full min-h-[56px]
-                      text-lg font-bold text-white rounded-xl
-                      transition-all duration-200"
-               style="background-color:#E84393;"
+
+          <!-- 전화 -->
+          <div class="px-6 py-5 border-b border-neutral-100">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-9 h-9 rounded-lg bg-primary-50 flex items-center justify-center shrink-0"
+                   aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                     fill="none" stroke="#ff7f65" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.64 13
+                           19.79 19.79 0 0 1 1.58 4.42a2 2 0 0 1 1.99-2.18h3a2 2 0 0 1 2 1.72
+                           c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91
+                           a16 16 0 0 0 6.05 6.05l.62-.62a2 2 0 0 1 2.11-.45
+                           c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-base font-bold text-neutral-900">전화 상담</p>
+                <p class="text-sm text-neutral-400">070-8655-2031 · 주말·공휴일 휴무</p>
+              </div>
+            </div>
+            <a id="phone-cta" href="tel:070-8655-2031"
+               class="np-btn np-btn-primary np-btn-lg w-full"
                aria-label="전화 상담 연결하기">
-              지금 전화 연결하기
+              지금 전화하기
             </a>
-            <p class="text-sm text-neutral-400 text-center">주말·공휴일 고객센터 휴무</p>
           </div>
-        </article>
 
-        <!-- 카카오톡 상담 카드 -->
-        <article class="bg-white rounded-2xl shadow-md p-6 flex flex-col gap-5
-                        transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
-                 aria-label="카카오톡 상담 채널 카드">
-          <div class="flex items-start justify-between">
-            <span class="np-badge np-badge-warning">카카오톡</span>
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
-                 style="background-color:#fffbf0;" aria-hidden="true">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                   fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
+          <!-- 카카오톡 -->
+          <div class="px-6 py-5 border-b border-neutral-100">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-9 h-9 rounded-lg bg-neutral-100 flex items-center justify-center shrink-0"
+                   aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                     fill="none" stroke="#666" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-base font-bold text-neutral-900">카카오톡 상담</p>
+                <p class="text-sm text-neutral-400">성함·연락처를 남겨주세요</p>
+              </div>
             </div>
+            <a href="https://pf.kakao.com/_REPLACE_WITH_ACTUAL_ID"
+               target="_blank" rel="noopener noreferrer"
+               onclick="handleKakaoClick(event)"
+               class="np-btn np-btn-secondary np-btn-md w-full"
+               aria-label="카카오톡 상담 연결하기">
+              카카오톡 열기
+            </a>
           </div>
-          <div>
-            <p class="text-sm font-semibold mb-1" style="color:#F5A623;">카카오톡</p>
-            <h3 class="text-2xl font-bold text-neutral-900">카카오톡 상담</h3>
-          </div>
-          <div>
-            <p class="text-sm font-bold text-neutral-400 mb-1">TODAY</p>
-            <p class="text-lg font-semibold text-neutral-800">10:00 – 17:00</p>
-            <p class="text-base text-neutral-400">점심 13:00 – 14:00</p>
-          </div>
-          <p class="text-base text-neutral-600 leading-relaxed flex-1">
-            버튼을 누르면 카카오톡으로 메시지가 전송됩니다.<br/>
-            성함과 연락처를 함께 남겨주시면 더욱 빠르게 안내해 드립니다.
-          </p>
-          <a href="https://pf.kakao.com/_REPLACE_WITH_ACTUAL_ID"
-             target="_blank"
-             rel="noopener noreferrer"
-             onclick="handleKakaoClick(event)"
-             class="channel-cta flex items-center justify-center gap-2 w-full min-h-[56px]
-                    text-lg font-bold text-white rounded-xl
-                    transition-all duration-200"
-             style="background-color:#F5A623;"
-             aria-label="카카오톡 상담 연결하기">
-            카카오톡 열기
-          </a>
-        </article>
 
-        <!-- 채팅 상담 카드 -->
-        <article class="bg-white rounded-2xl shadow-md p-6 flex flex-col gap-5
-                        transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
-                 aria-label="채팅 상담 채널 카드">
-          <div class="flex items-start justify-between">
-            <span class="np-badge np-badge-info">채널톡안내</span>
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center"
-                 style="background-color:#f5f0ff;" aria-hidden="true">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-                   fill="none" stroke="#7B2FBE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/>
-                <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/>
-              </svg>
+          <!-- 채팅 -->
+          <div class="px-6 py-5">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-9 h-9 rounded-lg bg-neutral-100 flex items-center justify-center shrink-0"
+                   aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                     fill="none" stroke="#666" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/>
+                  <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/>
+                </svg>
+              </div>
+              <div>
+                <p class="text-base font-bold text-neutral-900">채팅 상담</p>
+                <p class="text-sm text-neutral-400">채팅창에서 연락처를 남겨주세요</p>
+              </div>
             </div>
+            <button onclick="openChannelTalk()"
+                    class="np-btn np-btn-grey-stroke np-btn-md w-full"
+                    aria-label="채팅 상담 연결하기">
+              채팅 시작하기
+            </button>
           </div>
-          <div>
-            <p class="text-sm font-semibold mb-1" style="color:#7B2FBE;">채널톡안내</p>
-            <h3 class="text-2xl font-bold text-neutral-900">채팅 상담</h3>
-          </div>
-          <div>
-            <p class="text-sm font-bold text-neutral-400 mb-1">TODAY</p>
-            <p class="text-lg font-semibold text-neutral-800">10:00 – 17:00</p>
-            <p class="text-base text-neutral-400">점심 13:00 – 14:00</p>
-          </div>
-          <p class="text-base text-neutral-600 leading-relaxed flex-1">
-            버튼을 누르면 채팅창이 열립니다.<br/>
-            성함과 연락처를 남긴 후 전송 버튼을 눌러주세요.
-          </p>
-          <button onclick="openChannelTalk()"
-                  class="channel-cta flex items-center justify-center gap-2 w-full min-h-[56px]
-                         text-lg font-bold text-white rounded-xl
-                         transition-all duration-200"
-                  style="background-color:#7B2FBE;"
-                  aria-label="채팅 상담 연결하기">
-            채팅 상담 시작하기
-          </button>
-        </article>
-
-      </div>
-    </section>
-    
-
-    <!-- ── 섹션 04+05: 운영시간 + 이용 안내 ── -->
-    <section class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16"
-             aria-labelledby="hours-section-title">
-
-      <!-- 운영시간 테이블 -->
-      <div class="bg-white rounded-2xl shadow-md p-6">
-        <h2 id="hours-section-title" class="text-2xl font-bold text-neutral-900 mb-5">
-          운영시간
-        </h2>
-        <table class="w-full">
-          <caption class="sr-only">고객센터 요일별 운영시간</caption>
-          <tbody>
-            <tr id="row-monday" class="border-b border-neutral-100">
-              <th scope="row" class="text-left py-3 pr-4 text-lg font-medium text-neutral-700 w-28">
-                월요일
-              </th>
-              <td class="py-3 text-lg text-neutral-800 font-semibold">10:00 – 17:00</td>
-            </tr>
-            <tr id="row-tuesday" class="border-b border-neutral-100">
-              <th scope="row" class="text-left py-3 pr-4 text-lg font-medium text-neutral-700">
-                화요일
-              </th>
-              <td class="py-3 text-lg text-neutral-800 font-semibold">10:00 – 17:00</td>
-            </tr>
-            <tr id="row-wednesday" class="border-b border-neutral-100">
-              <th scope="row" class="text-left py-3 pr-4 text-lg font-medium text-neutral-700">
-                수요일
-              </th>
-              <td class="py-3 text-lg text-neutral-800 font-semibold">10:00 – 17:00</td>
-            </tr>
-            <tr id="row-thursday" class="border-b border-neutral-100">
-              <th scope="row" class="text-left py-3 pr-4 text-lg font-medium text-neutral-700">
-                목요일
-              </th>
-              <td class="py-3 text-lg text-neutral-800 font-semibold">10:00 – 17:00</td>
-            </tr>
-            <tr id="row-friday" class="border-b border-neutral-100">
-              <th scope="row" class="text-left py-3 pr-4 text-lg font-medium text-neutral-700">
-                금요일
-              </th>
-              <td class="py-3 text-lg text-neutral-800 font-semibold">10:00 – 17:00</td>
-            </tr>
-            <tr id="row-saturday" class="border-b border-neutral-100">
-              <th scope="row" class="text-left py-3 pr-4 text-lg font-medium text-neutral-700">
-                토요일
-              </th>
-              <td class="py-3 text-lg font-semibold text-error-500">휴무</td>
-            </tr>
-            <tr id="row-sunday">
-              <th scope="row" class="text-left py-3 pr-4 text-lg font-medium text-neutral-700">
-                일요일
-              </th>
-              <td class="py-3 text-lg font-semibold text-error-500">휴무</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- 점심시간 인포 박스 -->
-        <div class="mt-5 flex items-center gap-3 bg-warning-100 rounded-xl px-4 py-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-               fill="none" stroke="#ff9800" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
-          </svg>
-          <p class="text-base font-semibold text-warning-500">
-            점심시간 13:00 – 14:00 (상담 지연될 수 있음)
-          </p>
         </div>
 
-        <!-- 오늘 요일 상태 -->
-        <p id="today-highlight" class="mt-4 text-base font-semibold leading-relaxed"></p>
-      </div>
-
-      <!-- 이용 안내 -->
-      <div class="bg-white rounded-2xl shadow-md p-6">
-        <h2 class="text-2xl font-bold text-neutral-900 mb-5">이용 안내</h2>
-        <ul class="flex flex-col gap-5" role="list">
-          <li class="flex gap-3">
-            <span class="shrink-0 w-6 h-6 rounded-full bg-primary-100 text-primary-500
-                         text-sm font-bold flex items-center justify-center"
-                  aria-hidden="true">1</span>
-            <p class="text-base text-neutral-700 leading-relaxed">
-              운영시간 외 문의는 접수 후 다음 운영시간에 순차적으로 답변됩니다.
-            </p>
-          </li>
-          <li class="flex gap-3">
-            <span class="shrink-0 w-6 h-6 rounded-full bg-primary-100 text-primary-500
-                         text-sm font-bold flex items-center justify-center"
-                  aria-hidden="true">2</span>
-            <p class="text-base text-neutral-700 leading-relaxed">
-              전화 연결이 어렵다면 카카오톡 또는 채팅 문의를 함께 이용하시면 좋습니다.
-            </p>
-          </li>
-          <li class="flex gap-3">
-            <span class="shrink-0 w-6 h-6 rounded-full bg-primary-100 text-primary-500
-                         text-sm font-bold flex items-center justify-center"
-                  aria-hidden="true">3</span>
-            <p class="text-base text-neutral-700 leading-relaxed">
-              점심시간(13:00–14:00)에는 상담이 지연될 수 있습니다.
-            </p>
-          </li>
-        </ul>
-
-        <!-- 대표 전화 박스 -->
-        <div class="mt-6 p-5 rounded-xl bg-neutral-50 border border-neutral-200">
-          <p class="text-sm font-bold text-neutral-400 mb-2">대표 전화</p>
-          <a href="tel:070-8655-2031"
-             class="text-2xl font-bold text-neutral-900 hover:text-primary-500
-                    transition-colors duration-120 focus-visible:outline-none
-                    focus-visible:underline">
-            070-8655-2031
-          </a>
-          <p class="text-sm text-neutral-400 mt-1">평일 10:00 – 17:00</p>
+        <!-- 운영시간 (축약형) -->
+        <div class="bg-white rounded-2xl shadow-sm p-5 mt-4">
+          <h3 class="text-base font-bold text-neutral-900 mb-3">운영시간</h3>
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <span class="text-base text-neutral-700">평일 (월~금)</span>
+              <span class="text-base font-semibold text-neutral-900">10:00 – 17:00</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-base text-neutral-400">점심시간</span>
+              <span class="text-base text-neutral-400">13:00 – 14:00</span>
+            </div>
+            <div class="np-divider"></div>
+            <div class="flex items-center justify-between">
+              <span class="text-base text-neutral-700">주말·공휴일</span>
+              <span class="text-base font-semibold text-error-500">휴무</span>
+            </div>
+          </div>
+          <p id="today-highlight" class="mt-3 text-sm text-neutral-400 leading-relaxed"></p>
         </div>
-      </div>
 
-    </section>
+      </aside>
+    </div>
 
   </main>
 
@@ -450,9 +432,8 @@
     </a>
   </nav>
 
-  <!-- ── 운영 상태 스크립트 ── -->
+  <!-- ── 스크립트 ── -->
   <script>
-    // 한국 법정 공휴일 (KST 기준 날짜)
     const HOLIDAYS = new Set([
       '2025-01-01','2025-01-28','2025-01-29','2025-01-30',
       '2025-03-01','2025-05-05','2025-05-06','2025-06-06',
@@ -463,94 +444,62 @@
       '2026-08-15','2026-10-03','2026-10-09','2026-12-25',
     ]);
 
-    const STATUS_CONFIG = {
-      open:    { label: '현재 상담 가능',  sublabel: '빠르게 연결해 드립니다',   bg: '#10B981', icon: '●' },
-      lunch:   { label: '점심시간 중',     sublabel: '14:00부터 상담 재개됩니다', bg: '#F59E0B', icon: '🕐' },
-      closed:  { label: '운영 시간 외',    sublabel: '평일 10:00–17:00 운영합니다', bg: '#94A3B8', icon: '●' },
-      holiday: { label: '오늘은 휴무일',   sublabel: '평일에 다시 연락주세요',    bg: '#94A3B8', icon: '●' },
-    };
-
-    const DAY_KEYS = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
-    const DAY_KOR  = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
+    const DAY_KOR = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
 
     function getKSTNow() {
-      const now = new Date();
-      // UTC + 9시간 오프셋으로 KST 계산
-      return new Date(now.getTime() + 9 * 60 * 60 * 1000);
+      return new Date(Date.now() + 9 * 60 * 60 * 1000);
     }
 
     function getStatus() {
-      const kst = getKSTNow();
-      const y   = kst.getUTCFullYear();
-      const m   = String(kst.getUTCMonth() + 1).padStart(2, '0');
-      const d   = String(kst.getUTCDate()).padStart(2, '0');
+      const kst     = getKSTNow();
+      const y       = kst.getUTCFullYear();
+      const m       = String(kst.getUTCMonth() + 1).padStart(2, '0');
+      const d       = String(kst.getUTCDate()).padStart(2, '0');
       const dateStr = `${y}-${m}-${d}`;
-      const dow  = kst.getUTCDay(); // 0=일, 6=토
-      const mins = kst.getUTCHours() * 60 + kst.getUTCMinutes();
+      const dow     = kst.getUTCDay();
+      const mins    = kst.getUTCHours() * 60 + kst.getUTCMinutes();
 
       if (dow === 0 || dow === 6)     return 'holiday';
       if (HOLIDAYS.has(dateStr))      return 'holiday';
-      if (mins < 600 || mins >= 1020) return 'closed';  // <10:00 or >=17:00
-      if (mins >= 780 && mins < 840)  return 'lunch';   // 13:00–14:00
+      if (mins < 600 || mins >= 1020) return 'closed';
+      if (mins >= 780 && mins < 840)  return 'lunch';
       return 'open';
     }
 
-    function updateStatusBanner() {
+    function updateStatus() {
       const status = getStatus();
-      const cfg = STATUS_CONFIG[status];
-
-      document.getElementById('status-banner').style.backgroundColor = cfg.bg;
-      document.getElementById('status-icon').textContent   = cfg.icon;
-      document.getElementById('status-label').textContent  = cfg.label;
-      document.getElementById('status-sublabel').textContent = cfg.sublabel;
-
-      // 전화 CTA 운영시간 외 비활성화
-      const phoneCta   = document.getElementById('phone-cta');
-      const phoneBadge = document.getElementById('phone-badge');
-      const disabled   = status === 'closed' || status === 'holiday' || status === 'lunch';
-
-      if (disabled) {
-        phoneCta.style.backgroundColor = '#94A3B8';
-        phoneCta.style.cursor          = 'not-allowed';
-        phoneCta.style.pointerEvents   = 'none';
-        phoneCta.textContent =
-          status === 'lunch' ? '점심시간 – 14:00부터 상담 가능' : '운영 시간이 아닙니다';
-        phoneBadge.className   = 'np-badge np-badge-neutral';
-        phoneBadge.textContent = status === 'lunch' ? '점심시간' : '운영종료';
-      } else {
-        phoneCta.style.backgroundColor = '#E84393';
-        phoneCta.style.cursor          = 'pointer';
-        phoneCta.style.pointerEvents   = 'auto';
-        phoneCta.textContent           = '지금 전화 연결하기';
-        phoneBadge.className           = 'np-badge np-badge-success';
-        phoneBadge.textContent         = '운영중';
-      }
-    }
-
-    function highlightTodayRow() {
-      const kst = getKSTNow();
-      const dow = kst.getUTCDay();
-      const row = document.getElementById('row-' + DAY_KEYS[dow]);
-      if (row) row.classList.add('today-row');
-
-      const status  = getStatus();
-      const hl      = document.getElementById('today-highlight');
-      const dayKor  = DAY_KOR[dow];
-      const messages = {
-        open:    { text: `오늘(${dayKor})은 운영 중입니다.`,             color: '#10B981' },
-        lunch:   { text: `오늘(${dayKor}) 점심시간입니다. 14:00 재개.`, color: '#F59E0B' },
-        closed:  { text: `오늘(${dayKor})은 운영 시간이 아닙니다.`,     color: '#94A3B8' },
-        holiday: { text: `오늘(${dayKor})은 휴무입니다.`,               color: '#f44336' },
+      const labels = {
+        open:    '현재 상담 가능',
+        lunch:   '점심시간',
+        closed:  '운영 시간 외',
+        holiday: '오늘은 휴무',
       };
-      const msg = messages[status];
-      hl.textContent  = msg.text;
-      hl.style.color  = msg.color;
+
+      const pill = document.getElementById('status-pill');
+      pill.dataset.status = status;
+      document.getElementById('status-label').textContent = labels[status];
+
+      const phoneCta = document.getElementById('phone-cta');
+      const disabled = status !== 'open';
+      phoneCta.dataset.disabled = disabled ? 'true' : 'false';
+      phoneCta.textContent = disabled
+        ? (status === 'lunch' ? '점심시간 – 14:00 재개' : '운영 시간이 아닙니다')
+        : '지금 전화하기';
+
+      const kst    = getKSTNow();
+      const dayKor = DAY_KOR[kst.getUTCDay()];
+      const msgs   = {
+        open:    `오늘(${dayKor}) 운영 중입니다.`,
+        lunch:   `오늘(${dayKor}) 점심시간입니다. 14:00에 재개됩니다.`,
+        closed:  `오늘(${dayKor}) 운영 시간이 아닙니다.`,
+        holiday: `오늘(${dayKor}) 휴무입니다.`,
+      };
+      document.getElementById('today-highlight').textContent = msgs[status];
     }
 
     function handleKakaoClick(e) {
       if (/iPhone|Android/i.test(navigator.userAgent)) {
         e.preventDefault();
-        // 실제 채널 ID로 교체 필요
         window.location.href = 'kakaotalk://plusfriend/home/_nextpartner';
       }
     }
@@ -563,12 +512,8 @@
       }
     }
 
-    // 초기 실행
-    updateStatusBanner();
-    highlightTodayRow();
-    // 1분마다 갱신
-    setInterval(updateStatusBanner, 60_000);
-    // Lucide 아이콘 렌더링
+    updateStatus();
+    setInterval(updateStatus, 60_000);
     lucide.createIcons();
   </script>
 
